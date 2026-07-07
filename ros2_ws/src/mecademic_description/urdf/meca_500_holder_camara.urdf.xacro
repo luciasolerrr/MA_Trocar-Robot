@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot name="meca500_robot_tool" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Existing Meca500 Robot Description and tool -->
+  <xacro:include filename="meca_500_r3.urdf.xacro"/>
+  <xacro:include filename="camara.xacro"/>
+
+    <!-- Attach the needle_holder to meca_axis_6_joint -->
+  <joint name="meca_to_holder" type="fixed">
+      <parent link="meca_axis_6_link"/>
+      <child link="needle_holder"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint> 
+
+  <link name="needle_holder">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mecademic_description/meshes/dummy_needle_tool.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://mecademic_description/meshes/dummy_needle_tool.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="needle_to_tip" type="fixed">
+    <parent link="needle_holder"/>
+    <child link="needle_tip"/>
+    <origin rpy="0 0 0" xyz="0.1284 0 0"/>
+  </joint>
+  <link name="needle_tip">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius=".001"/>
+      </geometry>
+      <material name="red">
+            <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius=".001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  
+
+</robot>

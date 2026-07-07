@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="meca_500_r3">
+  
+  <group name="meca_arm">
+    <chain base_link="meca_base_link" tip_link="tcp_link"/>
+  </group>
+
+  <group name="meca_needle">
+    <link name="holder_link"/>
+    <link name="tool0_link"/>
+    <link name="tcp_link"/>
+  </group>
+
+  <end_effector
+    name="needle"
+    parent_link="meca_frf_link"
+    group="meca_needle"
+    parent_group="meca_arm"/>
+
+</robot>

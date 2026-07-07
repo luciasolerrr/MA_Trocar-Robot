@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>mecademic_description</name>
+  <version>1.0.1</version>
+  <description>Meshes, URDF/Xacro and launch files for the Meca500 (ROS 2)</description>
+
+  <maintainer email="support@mecademic.com">Mecademic</maintainer>
+  <author email="dniewinski@clearpathrobotics.com">Dave Niewinski</author>
+  <license>MIT</license>
+
+  <!-- Build system -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Runtime tools commonly used with description packages -->
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
