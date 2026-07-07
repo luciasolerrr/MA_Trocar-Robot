@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    frame_id: "meca_base_link"
+    child_frame_id: "pcl_frame"
+    translation:
+      x: -522.067871
+      y: 215.935257
+      z: 242.03595
+    rotation:
+      x: 0.567498162
+      y: -0.566816275
+      z: 0.411109419
+      w: -0.433190718
