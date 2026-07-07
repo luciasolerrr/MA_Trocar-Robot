@@ -1,0 +1,17 @@
+<launch>
+  <arg name="serial_number" default="" description="Serial number of camera to connect to"/>
+  <node pkg="zivid_camera" exec="zivid_camera" name="zivid_camera">
+    <param name="serial_number" value="$(var serial_number)"/>
+  </node>
+
+  <!-- Specify the Zivid camera model for the URDF. See available options in `README.md`. -->
+  <arg name="model" default="ZIVID_2_M70" />
+  <!-- Specify the visibility of the field of view of the camera model for the URDF. -->
+  <arg name="field_of_view" default="false" />
+  <node pkg="robot_state_publisher" name="robot_state_publisher" exec="robot_state_publisher">
+    <param
+      name="robot_description"
+      value="$(command '$(find-exec xacro) $(find-pkg-share zivid_description)/urdf/zivid_camera.urdf.xacro model:=$(var model) field_of_view:=$(var field_of_view)')"
+    />
+  </node>
+</launch>
