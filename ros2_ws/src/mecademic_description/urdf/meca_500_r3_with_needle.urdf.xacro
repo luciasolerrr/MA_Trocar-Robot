@@ -3,35 +3,54 @@
 
   <!-- ==========================================
        XACRO PARAMETERS
-       Units are meters.
-       Holder length = 60 mm = 0.060 m
-       Needle length = 35 mm = 0.035 m
-       Needle diameter = 0.40 mm → radius = 0.0002 m
-       TCP from flange = 80 mm = holder_len + needle_len
 
-       COORDINATE CONVENTION (all tool links):
-         +X = approach direction (outward from flange)
-         Same as meca_axis_6_link native frame.
-         meca_frf_fixed has rpy="0 0 0" → NO frame rotation introduced.
+       Units are meters.
+
+       Visual tool geometry:
+         Holder length = 60 mm = 0.060 m
+         Needle visual length = 20 mm = 0.020 m
+         Needle diameter = 0.40 mm
+         Needle radius = 0.20 mm = 0.0002 m
+
+       Real calibrated Meca500 TCP:
+         SetTrf(-0.053, -0.457, 108.751, 0, 0, 0) mm
+
+       Native Meca500 tool convention:
+         +Z = approach / insertion direction
+
+       URDF / MoveIt convention used here:
+         +X = approach / insertion direction
+
+       Equivalent calibrated TCP offset in this URDF:
+         X = +108.751 mm
+         Y =   -0.457 mm
+         Z =   +0.053 mm
+
+       Therefore:
+         tcp_link xyz =
+         (0.108751, -0.000457, 0.000053) m
        ========================================== -->
 
   <xacro:property name="holder_len" value="${0.060}"/>
   <xacro:property name="needle_len" value="${0.020}"/>
   <xacro:property name="needle_rad" value="${0.0002}"/>
-  <xacro:property name="tcp_offset" value="${holder_len + needle_len}"/>
 
-  <!-- STL in mm? Then use 0.001. If STL is already in meters, use 1 1 1. -->
+  <!-- STL in mm? Then use 0.001.
+       If STL is already in meters, use 1 1 1. -->
   <xacro:property name="mesh_scale" value="0.001 0.001 0.001"/>
 
   <!-- Holder mesh pose relative to holder_link.
-       NOTE: holder_link +X is now the approach direction.
-       If the holder.stl was originally designed with +Z as approach,
-       set holder_rpy="0 -1.57079632679 0" to compensate visually. -->
+       holder_link +X is the approach direction.
+
+       If holder.stl was originally designed with +Z as approach,
+       this rotation aligns it visually with holder_link +X. -->
   <xacro:property name="holder_xyz" value="0 0 0"/>
   <xacro:property name="holder_rpy" value="0 1.57079632679 0"/>
 
   <!-- Holder mesh path -->
-  <xacro:property name="holder_visual_mesh" value="package://mecademic_description/meshes/holder.stl"/>
+  <xacro:property
+      name="holder_visual_mesh"
+      value="package://mecademic_description/meshes/holder.stl"/>
 
   <!-- Optional collision mesh -->
   <xacro:property name="holder_collision_mesh" value=""/>
@@ -49,6 +68,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_base.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -58,7 +78,10 @@
   </link>
 
 
-  <!-- Joint 1 -->
+  <!-- ==========================================
+       JOINT 1
+       ========================================== -->
+
   <link name="meca_axis_1_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -66,6 +89,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j1.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -79,11 +103,19 @@
     <parent link="meca_base_link"/>
     <child link="meca_axis_1_link"/>
     <axis xyz="0 0 1"/>
-    <limit effort="10.0" velocity="2.61799" lower="-3.05433" upper="3.05433"/>
+
+    <limit
+        effort="10.0"
+        velocity="2.61799"
+        lower="-3.05433"
+        upper="3.05433"/>
   </joint>
 
 
-  <!-- Joint 2 -->
+  <!-- ==========================================
+       JOINT 2
+       ========================================== -->
+
   <link name="meca_axis_2_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -91,6 +123,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j2.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -104,11 +137,19 @@
     <parent link="meca_axis_1_link"/>
     <child link="meca_axis_2_link"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" velocity="2.61799" lower="-1.22173048" upper="1.5708"/>
+
+    <limit
+        effort="10.0"
+        velocity="2.61799"
+        lower="-1.22173048"
+        upper="1.5708"/>
   </joint>
 
 
-  <!-- Joint 3 -->
+  <!-- ==========================================
+       JOINT 3
+       ========================================== -->
+
   <link name="meca_axis_3_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -116,6 +157,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j3.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -129,11 +171,19 @@
     <parent link="meca_axis_2_link"/>
     <child link="meca_axis_3_link"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" velocity="3.14159" lower="-2.35619" upper="1.22173048"/>
+
+    <limit
+        effort="10.0"
+        velocity="3.14159"
+        lower="-2.35619"
+        upper="1.22173048"/>
   </joint>
 
 
-  <!-- Joint 4 -->
+  <!-- ==========================================
+       JOINT 4
+       ========================================== -->
+
   <link name="meca_axis_4_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -141,6 +191,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j4.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -154,11 +205,19 @@
     <parent link="meca_axis_3_link"/>
     <child link="meca_axis_4_link"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" velocity="5.23599" lower="-2.96706" upper="2.96706"/>
+
+    <limit
+        effort="10.0"
+        velocity="5.23599"
+        lower="-2.96706"
+        upper="2.96706"/>
   </joint>
 
 
-  <!-- Joint 5 -->
+  <!-- ==========================================
+       JOINT 5
+       ========================================== -->
+
   <link name="meca_axis_5_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -166,6 +225,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j5.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -179,11 +239,19 @@
     <parent link="meca_axis_4_link"/>
     <child link="meca_axis_5_link"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10.0" velocity="5.23599" lower="-2.00713" upper="2.00713"/>
+
+    <limit
+        effort="10.0"
+        velocity="5.23599"
+        lower="-2.00713"
+        upper="2.00713"/>
   </joint>
 
 
-  <!-- Joint 6 / flange -->
+  <!-- ==========================================
+       JOINT 6 / FLANGE
+       ========================================== -->
+
   <link name="meca_axis_6_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -191,6 +259,7 @@
         <mesh filename="package://mecademic_description/meshes/meca_500_r3_j6.dae"/>
       </geometry>
     </visual>
+
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -204,19 +273,28 @@
     <parent link="meca_axis_5_link"/>
     <child link="meca_axis_6_link"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10.0" velocity="8.72665" lower="-3.14159" upper="3.14159"/>
+
+    <limit
+        effort="10.0"
+        velocity="8.72665"
+        lower="-3.14159"
+        upper="3.14159"/>
   </joint>
 
 
   <!-- ==========================================
-       HOLDER + NEEDLE + TCP
+       TOOL REFERENCE FRAME
        ========================================== -->
 
-  <!-- Meca FRF link.
-       rpy="0 0 0" → meca_frf_link is IDENTICAL to meca_axis_6_link frame.
-       Approach direction = +X for ALL downstream links.
-       No frame rotation is introduced here; the planning script applies
-       _RY_MINUS_90 uniformly to both meca_axis_6_link and tcp_link. -->
+  <!--
+       Reference frame attached to the Meca500 flange.
+
+       In this URDF representation, +X is used as the
+       tool approach / insertion direction.
+
+       No additional rotation is introduced here.
+  -->
+
   <link name="meca_frf_link"/>
 
   <joint name="meca_frf_fixed" type="fixed">
@@ -226,27 +304,37 @@
   </joint>
 
 
-  <!-- Holder link attached to the Meca FRF.
-       holder_link +X is the physical approach direction.
-       Collision box and inertia are centered at (holder_len/2, 0, 0). -->
+  <!-- ==========================================
+       HOLDER
+       ========================================== -->
+
+  <!--
+       Holder geometry is kept independently from tcp_link.
+
+       Therefore, changing the calibrated TCP does not require
+       changing the visual holder dimensions.
+  -->
+
   <link name="holder_link">
 
-    <!-- Holder visual mesh.
-         If holder.stl was built with +Z as approach, add rpy="0 -1.57079632679 0"
-         to the holder_rpy xacro property at the top to fix the visual orientation. -->
     <visual>
       <origin xyz="${holder_xyz}" rpy="${holder_rpy}"/>
+
       <geometry>
-        <mesh filename="${holder_visual_mesh}" scale="${mesh_scale}"/>
+        <mesh
+            filename="${holder_visual_mesh}"
+            scale="${mesh_scale}"/>
       </geometry>
+
       <material name="holder_gray">
         <color rgba="0.7 0.7 0.7 1.0"/>
       </material>
     </visual>
 
-    <!-- Holder collision: box extending holder_len along +X from the flange. -->
+    <!-- Collision box extends holder_len along +X -->
     <collision>
       <origin xyz="${holder_len/2.0} 0 0" rpy="0 0 0"/>
+
       <geometry>
         <box size="${holder_len} 0.02 0.02"/>
       </geometry>
@@ -254,8 +342,16 @@
 
     <inertial>
       <origin xyz="${holder_len/2.0} 0 0" rpy="0 0 0"/>
+
       <mass value="0.03"/>
-      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+
+      <inertia
+          ixx="1e-5"
+          ixy="0"
+          ixz="0"
+          iyy="1e-5"
+          iyz="0"
+          izz="1e-5"/>
     </inertial>
 
   </link>
@@ -267,35 +363,65 @@
   </joint>
 
 
-  <!-- Needle link (tool0_link).
-       The URDF cylinder primitive is always along the link's local +Z.
-       needle_fixed applies Ry(+90°) so that tool0_link local +Z aligns
-       with the approach direction (+X of holder_link / meca_axis_6_link).
-       Visual/collision geometry uses local Z offsets as usual. -->
+  <!-- ==========================================
+       NEEDLE
+       ========================================== -->
+
+  <!--
+       tool0_link is used for the needle geometry.
+
+       URDF cylinder primitives are aligned with the local Z axis.
+
+       Ry(+90°) is therefore applied in needle_fixed so that
+       tool0_link +Z aligns with holder_link +X, which is the
+       approach direction used in this URDF.
+  -->
+
   <link name="tool0_link">
 
     <visual>
-      <origin xyz="0 0 ${needle_len/2.0}" rpy="0 0 0"/>
+      <origin
+          xyz="0 0 ${needle_len/2.0}"
+          rpy="0 0 0"/>
+
       <geometry>
-        <cylinder length="${needle_len}" radius="${needle_rad}"/>
+        <cylinder
+            length="${needle_len}"
+            radius="${needle_rad}"/>
       </geometry>
+
       <material name="needle_steel">
         <color rgba="0.75 0.75 0.8 1.0"/>
       </material>
     </visual>
 
     <collision>
-      <origin xyz="0 0 ${needle_len/2.0}" rpy="0 0 0"/>
+      <origin
+          xyz="0 0 ${needle_len/2.0}"
+          rpy="0 0 0"/>
+
       <geometry>
         <!-- Slightly enlarged collision radius for safer planning -->
-        <cylinder length="${needle_len}" radius="${needle_rad*1.3}"/>
+        <cylinder
+            length="${needle_len}"
+            radius="${needle_rad*1.3}"/>
       </geometry>
     </collision>
 
     <inertial>
-      <origin xyz="0 0 ${needle_len/2.0}" rpy="0 0 0"/>
+      <origin
+          xyz="0 0 ${needle_len/2.0}"
+          rpy="0 0 0"/>
+
       <mass value="0.005"/>
-      <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+
+      <inertia
+          ixx="1e-7"
+          ixy="0"
+          ixz="0"
+          iyy="1e-7"
+          iyz="0"
+          izz="1e-7"/>
     </inertial>
 
   </link>
@@ -303,27 +429,71 @@
   <joint name="needle_fixed" type="fixed">
     <parent link="holder_link"/>
     <child link="tool0_link"/>
-    <!-- xyz: needle base is holder_len (60 mm) along holder_link +X (approach).
-         rpy: Ry(+90°) rotates tool0_link so its +Z = holder_link +X.
-              The cylinder geometry (along local +Z) therefore points along approach. -->
-    <origin xyz="${holder_len} 0 0" rpy="0 1.57079632679 0"/>
+
+    <!--
+         Needle base:
+           holder_len = 60 mm along holder +X
+
+         Rotation:
+           Ry(+90°) makes tool0_link local +Z point
+           along holder_link +X.
+    -->
+
+    <origin
+        xyz="${holder_len} 0 0"
+        rpy="0 1.57079632679 0"/>
   </joint>
 
 
-  <!-- TCP at the needle tip.
-       tcp_fixed undoes the Ry(+90°) from needle_fixed with Ry(-90°),
-       so tcp_link frame is identical to meca_axis_6_link frame: +X = approach.
+  <!-- ==========================================
+       CALIBRATED TCP
+       ========================================== -->
 
-       Position: 0 0 needle_len along tool0_link +Z = needle_len along approach.
-       Total approach offset from flange: holder_len + needle_len = 0.080 m. -->
+  <!--
+       TCP calibrated experimentally on the real Meca500:
+
+         SetTrf(
+             -0.053,
+             -0.457,
+             108.751,
+             0,
+             0,
+             0
+         ) mm
+
+       Meca500 native tool convention:
+         native +Z = approach direction
+
+       URDF / MoveIt convention:
+         URDF +X = approach direction
+
+       Coordinate conversion:
+
+         native X =  -0.053 mm  -> URDF Z = +0.053 mm
+         native Y =  -0.457 mm  -> URDF Y = -0.457 mm
+         native Z = 108.751 mm  -> URDF X = 108.751 mm
+
+       Therefore the calibrated tcp_link position from the flange is:
+
+         xyz =
+         0.108751  -0.000457  0.000053   [m]
+
+       tcp_link is attached directly to meca_frf_link.
+
+       The holder and needle links remain a separate branch used
+       to represent the physical tool geometry.
+  -->
+
   <link name="tcp_link"/>
 
   <joint name="tcp_fixed" type="fixed">
-    <parent link="tool0_link"/>
+    <parent link="meca_frf_link"/>
     <child link="tcp_link"/>
-    <!-- xyz: needle_len (20 mm) along tool0_link +Z (= approach direction).
-         rpy: Ry(-90°) restores tcp_link frame to match meca_axis_6_link (+X = approach). -->
-    <origin xyz="0 0 ${needle_len}" rpy="0 -1.57079632679 0"/>
+
+    <origin
+        xyz="0.108751 -0.000457 0.000053"
+        rpy="0 0 0"/>
   </joint>
+
 
 </robot>
